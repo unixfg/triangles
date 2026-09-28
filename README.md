@@ -5,7 +5,7 @@ This custom Home Assistant integration connects to compatible Timeular/ZEI
 trackers over Bluetooth LE and triggers scenes when you change the upward-facing
 side.
 
-Devices appear as **8-sided tracker · EE:FF**, using the Bluetooth address suffix
+Devices appear as **Timeular tracker · EE:FF**, using the Bluetooth address suffix
 to distinguish multiple trackers. You can rename each device to match its room
 or purpose.
 
@@ -69,7 +69,7 @@ background.
 
 1. In **Settings → Automations & scenes → Blueprints**, find
    **Triangles — eight scenes** and create an automation from it.
-2. Select your 8-sided tracker device.
+2. Select your Timeular tracker.
 3. Select the scene for each side you want to use. Empty sides do nothing.
 4. Save the automation, then flip the tracker to test it.
 

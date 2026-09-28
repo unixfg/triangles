@@ -21,7 +21,7 @@ class TrianglesEntity(CoordinatorEntity[TrianglesCoordinator]):
             connections={(CONNECTION_BLUETOOTH, coordinator.address)},
             name=coordinator.entry.title,
             manufacturer="Timeular",
-            model="8-sided tracker",
+            model="Tracker",
         )
 
     @property
