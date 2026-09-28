@@ -29,16 +29,19 @@ completed while the tracker is offline; the connection retries in the background
 
 ## Assign scenes
 
+Triangles installs its scene blueprint automatically when the integration is
+set up, including after a HACS update and Home Assistant restart. Existing
+blueprint copies are preserved so updates do not overwrite your edits.
+
 1. In **Settings → Automations & scenes → Blueprints**, find
    **Triangles — eight scenes** and create an automation from it.
 2. Select your Timeular tracker.
 3. Select the scene for each side you want to use. Empty sides do nothing.
 4. Save the automation, then flip the tracker to test it.
 
-If the blueprint does not appear, reload automations or restart Home Assistant
-after copying it. View **Current side** while turning the tracker to identify
-its internal side numbers, then label the faces to match. No face-to-number
-mapping is assumed from how the tracker looks.
+View **Current side** while turning the tracker to identify its internal side
+numbers, then label the faces to match. No face-to-number mapping is assumed
+from how the tracker looks.
 
 You can also use the normal automation editor: **Add trigger → Device →
 your tracker → Side 1 facing up**, then **Add action → Activate a scene**.

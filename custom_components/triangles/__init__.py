@@ -4,12 +4,22 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ADDRESS, EVENT_HOMEASSISTANT_STOP, Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.typing import ConfigType
 
-from .const import default_tracker_name
+from .blueprints import async_install_blueprint
+from .const import DOMAIN, default_tracker_name
 from .coordinator import TrianglesCoordinator
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.EVENT]
 type TrianglesConfigEntry = ConfigEntry[TrianglesCoordinator]
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Install the shared scene blueprint once for all trackers."""
+    await async_install_blueprint(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: TrianglesConfigEntry) -> bool:

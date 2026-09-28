@@ -22,6 +22,12 @@ def custom_integrations(enable_custom_integrations):
 
 
 @pytest.fixture
+def hass_config_dir(hass_tmp_config_dir):
+    """Keep installed blueprints and other configuration isolated per test."""
+    return hass_tmp_config_dir
+
+
+@pytest.fixture
 def entry(hass):
     entry = MockConfigEntry(
         domain=DOMAIN,
