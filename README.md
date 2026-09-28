@@ -125,8 +125,7 @@ Generated archives and development environments are excluded from Git.
 
 GitHub Actions run tests, lint/format checks, ZIP packaging, Hassfest, and HACS
 validation. Version tags matching the manifest trigger an automatic GitHub
-Release with the installation ZIP attached after all checks pass. Maintainer
-instructions are in [Publishing and CI](docs/PUBLISHING.md).
+Release with the installation ZIP attached after all checks pass.
 
 ## Protocol references
 
