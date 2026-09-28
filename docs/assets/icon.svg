@@ -1,9 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <title>Triangles scene controller: an eight-sided tracker</title>
-<g stroke="#123344" stroke-width="5" stroke-linejoin="round">
-  <polygon points="128,16 24,92 128,140" fill="#49D7C5"/>
-  <polygon points="128,16 128,140 232,92" fill="#A0EFE5"/>
-  <polygon points="24,92 128,240 128,140" fill="#159D9B"/>
-  <polygon points="232,92 128,140 128,240" fill="#2184B5"/>
-</g>
+  <title>Eight-sided white tracker with a black button cap</title>
+  <defs><clipPath id="shell"><path d="M 78.10,37.46 Q 81,30 88.32,33.23 L 150.68,60.77 Q 158,64 163.61,69.70 L 211.39,118.30 Q 217,124 214.10,131.46 L 177.90,224.54 Q 175,232 167.68,228.77 L 105.32,201.23 Q 98,198 92.39,192.30 L 44.61,143.70 Q 39,138 41.90,130.54 Z"/></clipPath></defs>
+  <g clip-path="url(#shell)">
+  <polygon points="217,124 98,198 175,232" fill="#CBD3D9" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="217,124 158,64 81,30" fill="#DEE4E8" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="39,138 98,198 81,30" fill="#FAFCFD" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="217,124 98,198 81,30" fill="#EBF0F3" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="217,124 202.25,109.0 183.0,100.5" fill="#46515A" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="217,124 187.25,142.5 206.5,151.0" fill="#20292F" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="217,124 187.25,142.5 183.0,100.5" fill="#303B43" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="194,110 207,120 198,129 186,119" fill="#1D262C" stroke="#71808B" stroke-width="1" stroke-linejoin="round"/>
+  <circle cx="192.5" cy="133.5" r="2.5" fill="#66CBB8"/>
+  </g>
+  <path d="M 78.10,37.46 Q 81,30 88.32,33.23 L 150.68,60.77 Q 158,64 163.61,69.70 L 211.39,118.30 Q 217,124 214.10,131.46 L 177.90,224.54 Q 175,232 167.68,228.77 L 105.32,201.23 Q 98,198 92.39,192.30 L 44.61,143.70 Q 39,138 41.90,130.54 Z" fill="none" stroke="#667680" stroke-width="1.75" stroke-linejoin="round"/>
 </svg>

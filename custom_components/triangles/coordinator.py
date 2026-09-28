@@ -68,6 +68,14 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
         self._ready = False
         self._raw_side: int | None = None
         self._stable_side: int | None = None
+        self.connection_stage = "not started"
+        self.connection_cycles = 0
+        self.last_error: dict[str, str] | None = None
+
+    @property
+    def worker_running(self) -> bool:
+        """Return whether the reconnect task is still active."""
+        return self._task is not None and not self._task.done()
 
     @callback
     def async_start(self) -> None:
@@ -102,6 +110,7 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
             task.cancel()
             with suppress(asyncio.CancelledError):
                 await task
+        self.connection_stage = "stopped"
 
     async def _async_run(self) -> None:
         """Reconnect using Home Assistant discovery and capped backoff."""
@@ -109,18 +118,22 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
         reported_error = False
         while not self._stopping:
             self._discovered.clear()
-            device = bluetooth.async_ble_device_from_address(
-                self.hass, self.address, connectable=True
-            )
-            if device is None:
-                with suppress(TimeoutError):
-                    await asyncio.wait_for(self._discovered.wait(), MAX_RETRY_SECONDS)
-                continue
-
             client: BleakClient | None = None
             self._disconnected.clear()
-            stage = "connection establishment"
+            self.connection_stage = "Bluetooth discovery"
             try:
+                device = bluetooth.async_ble_device_from_address(
+                    self.hass, self.address, connectable=True
+                )
+                if device is None:
+                    self.connection_stage = "waiting for discovery"
+                    with suppress(TimeoutError):
+                        await asyncio.wait_for(
+                            self._discovered.wait(), MAX_RETRY_SECONDS
+                        )
+                    continue
+                self.connection_stage = "connection establishment"
+                self.connection_cycles += 1
                 # Each connector attempt has its own timeout. An outer timeout
                 # would cut short retries after a slow or failed connection.
                 client = self._client = await establish_connection(
@@ -130,7 +143,7 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                     disconnected_callback=self._async_disconnected,
                     timeout=CONNECT_TIMEOUT,
                 )
-                stage = "orientation characteristic discovery"
+                self.connection_stage = "orientation characteristic discovery"
                 characteristic = client.services.get_characteristic(
                     ORIENTATION_CHARACTERISTIC_UUID
                 )
@@ -145,11 +158,11 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                     )
                 async with asyncio.timeout(GATT_TIMEOUT):
                     if "read" in characteristic.properties:
-                        stage = "initial orientation read"
+                        self.connection_stage = "initial orientation read"
                         self._prime(
                             parse_side(await client.read_gatt_char(characteristic))
                         )
-                    stage = "orientation subscription"
+                    self.connection_stage = "orientation subscription"
                     await client.start_notify(
                         characteristic,
                         partial(self._async_notification, client),
@@ -157,6 +170,7 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                 if not client.is_connected or self._disconnected.is_set():
                     raise BleakError("Tracker disconnected during setup")
                 self._ready = True
+                self.connection_stage = "connected"
                 self.async_set_updated_data(TrianglesState(True, self._stable_side))
                 if reported_error:
                     _LOGGER.info("Reconnected to Triangles %s", self.address)
@@ -169,11 +183,16 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                         await asyncio.wait_for(self._disconnected.wait(), 30)
             except _CONNECTION_ERRORS as err:
                 error = " ".join(str(err).split()) or type(err).__name__
+                self.last_error = {
+                    "stage": self.connection_stage,
+                    "type": type(err).__name__,
+                    "message": error,
+                }
                 if not reported_error:
                     _LOGGER.warning(
                         "Cannot connect to Triangles %s during %s: %s; will retry",
                         self.address,
-                        stage,
+                        self.connection_stage,
                         error,
                     )
                     reported_error = True
@@ -181,7 +200,7 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                     _LOGGER.debug(
                         "Triangles %s failed during %s: %s",
                         self.address,
-                        stage,
+                        self.connection_stage,
                         error,
                         exc_info=True,
                     )
@@ -198,7 +217,11 @@ class TrianglesCoordinator(DataUpdateCoordinator[TrianglesState]):
                             "Error releasing Triangles connection", exc_info=True
                         )
             if not self._stopping:
-                await asyncio.sleep(retry_delay)
+                self.connection_stage = "waiting to retry"
+                # A tracker may advertise only briefly after waking. A fresh
+                # discovery should interrupt the delay before it sleeps again.
+                with suppress(TimeoutError):
+                    await asyncio.wait_for(self._discovered.wait(), retry_delay)
                 retry_delay = min(retry_delay * 2, MAX_RETRY_SECONDS)
 
     @callback
