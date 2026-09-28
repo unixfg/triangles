@@ -35,13 +35,12 @@ jobs:
           REPOSITORY_REF: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           docker run --rm --pull=always \
-            --workdir /github/workspace \
             -e INPUT_GITHUB_TOKEN \
             -e INPUT_CATEGORY=integration \
             -e INPUT_COMMENT=false \
             -e REPOSITORY \
             -e REPOSITORY_REF \
             -e GITHUB_REPOSITORY \
-            -e GITHUB_WORKSPACE=/github/workspace \
+            -e GITHUB_WORKSPACE=/tmp \
             -e GITHUB_ACTIONS=true \
             ghcr.io/hacs/action:main
