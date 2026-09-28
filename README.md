@@ -18,52 +18,14 @@ characteristic described in [Protocol references](#protocol-references).
 Automated tests simulate Bluetooth hardware; compatibility across all tracker
 models and firmware versions is not verified.
 
-## Install with HACS
+## Hardware
 
-1. Open **HACS → ⋮ → Custom repositories**.
-2. Enter `https://github.com/unixfg/triangles` and choose **Integration**.
-3. Add it, then find **Triangles** in HACS and download it.
-4. Restart Home Assistant Core.
-5. Go to **Settings → Devices & services** and configure the discovered tracker,
-   or choose **Add integration → Triangles**.
-
-**Import the blueprint separately.** HACS downloads `custom_components/triangles`;
-it does not install this repository's `blueprints` directory. Open
-**Settings → Automations & scenes → Blueprints → Import blueprint**, and paste
-the GitHub file URL for
-[`blueprints/automation/triangles/eight_scenes.yaml`](https://github.com/unixfg/triangles/blob/main/blueprints/automation/triangles/eight_scenes.yaml).
-You can also copy that YAML file manually as described below.
-
-## Install manually
-
-1. Make sure Home Assistant's **Bluetooth** integration is working and the
-   tracker is within range of its adapter or proxy. Close any other application
-   connected to the tracker, then turn the tracker on.
-2. Copy the `custom_components/triangles` directory to
-   `/config/custom_components/triangles` on Home Assistant. Create
-   `custom_components` if necessary. The resulting path must be
-   `/config/custom_components/triangles/manifest.json`.
-3. Copy `blueprints/automation/triangles/eight_scenes.yaml` to
-   `/config/blueprints/automation/triangles/eight_scenes.yaml`.
-4. Restart **Home Assistant Core** from its system controls. Copying files alone
-   does not load a new custom integration.
-5. Open **Settings → Devices & services**. Configure the discovered tracker,
-   or choose **Add integration → Triangles → Choose a nearby tracker**.
-6. Open the new device. Its **Bluetooth connection** should be connected and
-   **Current side** should change as you flip it.
-
-Download `triangles-<version>.zip` from
-[GitHub Releases](https://github.com/unixfg/triangles/releases). The ZIP contains
-both directory trees. Extract it into Home Assistant's configuration directory
-(`/config`), preserving other integrations
-and blueprints. Back up an existing `triangles` directory before replacing it.
-Home Assistant supplies the Python dependencies.
+I've tested with the coin cell version, but
+the newer USB-C rechargeable trackers have much better signal.
 
 If entering an address manually, use the Bluetooth MAC address shown by
-**Home Assistant**, in `AA:BB:CC:DD:EE:FF` form. macOS normally reports a UUID
-instead; that identifier cannot be used as a Bluetooth MAC address. Manual setup
-can be completed while the tracker is offline; the connection retries in the
-background.
+**Home Assistant**, in `AA:BB:CC:DD:EE:FF` form. Manual setup can be
+completed while the tracker is offline; the connection retries in the background.
 
 ## Assign scenes
 
@@ -119,15 +81,6 @@ mode: restart
   `type` (`side_1`–`side_8`), `side`, and `previous_side` fields. For automations,
   prefer the supplied blueprint or device triggers: ordinary sensor state
   triggers can also fire when a sensor recovers from `unavailable`.
-
-## Verify operation
-
-1. Confirm the device connects and reports a side.
-2. Flip slowly through all eight faces and record their numbers.
-3. Assign one existing scene to one side and test a deliberate flip.
-4. Turn the tracker off and on. It should reconnect without activating a scene;
-   the next deliberate flip should work.
-5. Restart Home Assistant and check the same behavior.
 
 ## Troubleshooting
 
