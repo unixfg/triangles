@@ -29,9 +29,18 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Validate repository
-        uses: hacs/action@main
         env:
+          INPUT_GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           REPOSITORY_REF: ${{ github.event.pull_request.head.sha || github.sha }}
-        with:
-          category: integration
-          comment: "false"
+        run: |
+          docker run --rm --pull=always \
+            -e INPUT_GITHUB_TOKEN \
+            -e INPUT_CATEGORY=integration \
+            -e INPUT_COMMENT=false \
+            -e REPOSITORY \
+            -e REPOSITORY_REF \
+            -e GITHUB_REPOSITORY \
+            -e GITHUB_WORKSPACE=/tmp \
+            -e GITHUB_ACTIONS=true \
+            ghcr.io/hacs/action:main
