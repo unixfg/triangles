@@ -2,7 +2,8 @@
   "domain": "triangles",
   "name": "Triangles",
   "after_dependencies": [
-    "automation"
+    "automation",
+    "blueprint"
   ],
   "bluetooth": [
     {
