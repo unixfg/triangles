@@ -155,6 +155,63 @@ async def test_offline_setup_then_discovery(hass, entry, ble, discovery_info):
     assert entry.runtime_data.data.connected
 
 
+@pytest.mark.parametrize("discovery_during_cleanup", [False, True])
+async def test_discovery_interrupts_reconnect_backoff(
+    hass, entry, ble, discovery_info, discovery_during_cleanup
+):
+    create_client = ble.factory.side_effect
+    released = asyncio.Event()
+    subscribed = asyncio.Event()
+
+    def retry_client(*args, **kwargs):
+        client = create_client(*args, **kwargs)
+        if len(ble.clients) == 1:
+            client.start_notify.side_effect = BleakError("not ready")
+
+            async def disconnect():
+                await client._disconnect()
+                if discovery_during_cleanup:
+                    ble.register.call_args.args[1](discovery_info, None)
+                released.set()
+
+            client.disconnect.side_effect = disconnect
+        else:
+
+            async def subscribe(characteristic, callback):
+                await client._subscribe(characteristic, callback)
+                subscribed.set()
+
+            client.start_notify.side_effect = subscribe
+        return client
+
+    ble.factory.side_effect = retry_client
+    with patch("custom_components.triangles.coordinator.RETRY_SECONDS", 60):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await asyncio.wait_for(released.wait(), 1)
+        if not discovery_during_cleanup:
+            assert entry.runtime_data.connection_stage == "waiting to retry"
+            ble.register.call_args.args[1](discovery_info, None)
+        await asyncio.wait_for(subscribed.wait(), 1)
+        assert entry.runtime_data.data.connected
+        assert entry.runtime_data.connection_cycles == 2
+
+
+async def test_discovery_error_does_not_stop_reconnect_worker(
+    hass, entry, ble, discovery_info
+):
+    ble.lookup.side_effect = [KeyError("adapter vanished"), discovery_info.device]
+    with patch("custom_components.triangles.coordinator.RETRY_SECONDS", 0.01):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await settle(hass)
+        assert entry.runtime_data.worker_running
+        assert entry.runtime_data.data.connected
+        assert entry.runtime_data.last_error == {
+            "stage": "Bluetooth discovery",
+            "type": "KeyError",
+            "message": "'adapter vanished'",
+        }
+
+
 @pytest.mark.parametrize(
     "error", [BleakError("busy"), EOFError("transport closed"), TimeoutError()]
 )

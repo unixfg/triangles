@@ -111,7 +111,8 @@ mode: restart
   again. Stand/neutral reporting depends on the tracker's firmware.
 - A lost connection immediately makes the current-side entity unavailable and
   cancels any pending scene event. Connections retry automatically, with up to
-  60 seconds between failed connection cycles.
+  60 seconds between failed connection cycles. A new Bluetooth discovery
+  interrupts this delay so the integration can reconnect to a waking tracker.
 - An active connection occupies a Bluetooth connection slot. Other applications
   connected to the tracker may prevent Home Assistant from connecting.
 - Side events are also available as `triangles_side_changed`, with `device_id`,
@@ -134,6 +135,10 @@ If a tracker is not discovered or stays disconnected, check its battery,
 Bluetooth range, and whether another app is connected to it. The Bluetooth
 adapter or proxy must support active connections.
 
+**Side changed** shows the time of the last side-change event. Its state is
+unknown until the first flip after setup; unavailable means the Bluetooth
+connection is down.
+
 Enable debug logging for **Triangles** and inspect **Settings → System → Logs**
 for connection errors. Each error identifies the failed stage, such as
 connection establishment or the initial orientation read. A missing orientation
@@ -142,6 +147,9 @@ discovery.
 
 When reporting a problem, include the relevant log messages, Home Assistant
 version, tracker model or battery type, and firmware version if known.
+Use **Download diagnostics** from the Triangles integration entry's menu to
+capture connection state, reconnect-worker status, and the most recent failure.
+The diagnostic snapshot omits device names and Bluetooth addresses.
 
 ## Development
 
