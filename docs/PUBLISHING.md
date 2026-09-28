@@ -72,7 +72,7 @@ HACS downloads `custom_components/triangles`; users import the scene blueprint
 separately. The manual-install ZIP contains both directory trees for Home
 Assistant's `/config` directory, so `hacs.json` does not enable `zip_release`.
 Versioned ZIPs are attached to [GitHub Releases](https://github.com/unixfg/triangles/releases).
-Installation instructions are in the [README](../README.md#install-with-hacs).
+Scene setup is documented in the [README](../README.md#assign-scenes).
 
 ## Publish a version
 
@@ -81,8 +81,8 @@ Installation instructions are in the [README](../README.md#install-with-hacs).
 2. Push a matching version tag, for example:
 
    ```sh
-   git tag v0.1.2
-   git push origin v0.1.2
+   git tag v1.0.0
+   git push origin v1.0.0
    ```
 
 The **Release** workflow validates the tag against the manifest, then runs the
@@ -101,10 +101,10 @@ failed release, rerun its failed jobs or dispatch **Release** on the existing
 tag. Manual dispatch on a branch is rejected. Existing releases are not
 overwritten; publish changed code under a new version tag.
 
-Complete the [hardware checks](../README.md#verify-operation) before tagging a
-release and document tested hardware and known limitations in the repository.
-Automated tests use simulated Bluetooth I/O and do not establish firmware
-compatibility.
+Test connection, side changes, and reconnection on hardware before tagging a
+release. Record tested models and limitations in the
+[hardware notes](../README.md#hardware). Automated tests use simulated Bluetooth
+I/O and do not establish firmware compatibility.
 
 ## Apply for the default HACS catalog
 
