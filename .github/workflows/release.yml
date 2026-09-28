@@ -80,8 +80,10 @@ jobs:
               manifest = json.loads(archive.read("custom_components/triangles/manifest.json"))
               if manifest["version"] != os.environ["RELEASE_VERSION"]:
                   raise SystemExit("Release ZIP version does not match the tag")
-              if "blueprints/automation/triangles/eight_scenes.yaml" not in archive.namelist():
-                  raise SystemExit("Release ZIP is missing the scene blueprint")
+              bundled = archive.read("custom_components/triangles/blueprints/eight_scenes.yaml")
+              importable = archive.read("blueprints/automation/triangles/eight_scenes.yaml")
+              if bundled != importable:
+                  raise SystemExit("Bundled and importable scene blueprints do not match")
           PY
       - name: Publish release and ZIP
         env:

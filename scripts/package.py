@@ -16,9 +16,14 @@ for filename in (
     "licenses/MIT-linux-client.txt",
     "licenses/MIT-node-client.txt",
     "brand/icon.png",
+    "blueprints/eight_scenes.yaml",
 ):
     if not (component / filename).is_file():
         raise SystemExit(f"Missing distribution file: {filename}")
+bundled_blueprint = component / "blueprints/eight_scenes.yaml"
+import_blueprint = root / "blueprints/automation/triangles/eight_scenes.yaml"
+if bundled_blueprint.read_bytes() != import_blueprint.read_bytes():
+    raise SystemExit("Bundled and importable scene blueprints must match")
 destination = root / "dist" / f"triangles-{manifest['version']}.zip"
 destination.parent.mkdir(exist_ok=True)
 with ZipFile(destination, "w", compression=ZIP_DEFLATED) as archive:
