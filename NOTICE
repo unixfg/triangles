@@ -1,0 +1,18 @@
+Triangles
+Copyright 2026 Triangles contributors
+
+Triangles includes Home Assistant integration patterns adapted for a local,
+eight-sided scene controller. Home Assistant Core and its contributors provide
+these patterns under the Apache License, Version 2.0. The modified config-flow
+and device-trigger modules identify their source and changes.
+
+Protocol references are credited to Constantin Schomburg, Kris Buist,
+LeMaRiva, and Zack Dawood. The upstream MIT notices are retained verbatim in
+the integration's licenses directory. Apache-licensed references are covered
+by the included Apache 2.0 license text.
+
+See CREDITS.md in the integration directory for source revisions, links,
+the relationship to this implementation, and license locations.
+
+Timeular and EARLY identify the supported hardware and its vendor. Triangles
+is an independent community project and is not affiliated with those vendors.

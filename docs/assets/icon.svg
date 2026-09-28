@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Triangles scene controller: an eight-sided tracker</title>
+<g stroke="#123344" stroke-width="5" stroke-linejoin="round">
+  <polygon points="128,16 24,92 128,140" fill="#49D7C5"/>
+  <polygon points="128,16 128,140 232,92" fill="#A0EFE5"/>
+  <polygon points="24,92 128,240 128,140" fill="#159D9B"/>
+  <polygon points="232,92 128,140 128,240" fill="#2184B5"/>
+</g>
+</svg>

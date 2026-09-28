@@ -1,0 +1,37 @@
+name: Validate for HACS
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+  schedule:
+    - cron: "23 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: Hassfest
+    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    timeout-minutes: 15
+    steps:
+      - name: Validate repository
+        uses: hacs/action@main
+        env:
+          REPOSITORY_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          category: integration
+          comment: "false"

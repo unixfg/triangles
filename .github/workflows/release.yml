@@ -1,0 +1,98 @@
+name: Release
+run-name: Release ${{ github.ref_name }}
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Validate release tag
+    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    timeout-minutes: 5
+    outputs:
+      tag: ${{ steps.metadata.outputs.tag }}
+      version: ${{ steps.metadata.outputs.version }}
+      asset: ${{ steps.metadata.outputs.asset }}
+      sha: ${{ steps.metadata.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Read release metadata
+        id: metadata
+        run: |
+          python3 scripts/release_metadata.py
+          source_sha=$(git rev-parse HEAD)
+          echo "sha=$source_sha" >> "$GITHUB_OUTPUT"
+
+  ci:
+    name: CI
+    needs: version
+    uses: ./.github/workflows/ci.yml
+
+  validate:
+    name: HACS and Hassfest
+    needs: version
+    uses: ./.github/workflows/validate.yml
+
+  publish:
+    name: Publish GitHub Release
+    needs: [version, ci, validate]
+    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ needs.version.outputs.tag }}
+      RELEASE_VERSION: ${{ needs.version.outputs.version }}
+      RELEASE_ASSET: ${{ needs.version.outputs.asset }}
+      RELEASE_SHA: ${{ needs.version.outputs.sha }}
+    steps:
+      - name: Download validated installation ZIP
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: triangles-manual-install
+          path: release
+      - name: Verify installation ZIP
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          asset = Path("release") / os.environ["RELEASE_ASSET"]
+          if not asset.is_file():
+              raise SystemExit(f"Missing release asset: {asset}")
+          with ZipFile(asset) as archive:
+              if archive.testzip() is not None:
+                  raise SystemExit("Release ZIP failed its integrity check")
+              manifest = json.loads(archive.read("custom_components/triangles/manifest.json"))
+              if manifest["version"] != os.environ["RELEASE_VERSION"]:
+                  raise SystemExit("Release ZIP version does not match the tag")
+              if "blueprints/automation/triangles/eight_scenes.yaml" not in archive.namelist():
+                  raise SystemExit("Release ZIP is missing the scene blueprint")
+          PY
+      - name: Publish release and ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          remote_sha=$(gh api "repos/$GH_REPO/commits/$RELEASE_TAG" --jq .sha)
+          if [[ "$remote_sha" != "$RELEASE_SHA" ]]; then
+            echo "Release tag no longer points to the validated commit" >&2
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" "release/$RELEASE_ASSET" \
+            --verify-tag \
+            --title "Triangles $RELEASE_TAG" \
+            --generate-notes

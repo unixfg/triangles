@@ -1,0 +1,84 @@
+{
+  "title": "Triangles",
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Add an 8-sided scene controller",
+        "menu_options": {
+          "discovered": "Choose a nearby tracker",
+          "manual": "Enter a Bluetooth address"
+        }
+      },
+      "discovered": {
+        "title": "Choose your tracker",
+        "description": "Turn on your tracker and close any apps connected to it. The tracker must be within Bluetooth range of Home Assistant.",
+        "data": {
+          "address": "Tracker"
+        }
+      },
+      "manual": {
+        "title": "Enter the tracker's Bluetooth address",
+        "description": "Enter the Bluetooth MAC address shown in Home Assistant (AA:BB:CC:DD:EE:FF). You can add the tracker while it is offline; connection attempts resume when Home Assistant detects it.",
+        "data": {
+          "address": "Bluetooth address"
+        }
+      },
+      "confirm": {
+        "title": "Add {name}",
+        "description": "Add this tracker to Triangles. Close any other apps connected to it. After setup, assign scenes using the eight-scenes blueprint or device triggers."
+      }
+    },
+    "error": {
+      "invalid_address": "Enter a Bluetooth address such as AA:BB:CC:DD:EE:FF."
+    },
+    "abort": {
+      "already_configured": "This tracker is already configured.",
+      "not_supported": "This is not a supported, connectable tracker.",
+      "no_devices_found": "No new trackers found. Turn on the tracker, close any other apps connected to it, and check Home Assistant's Bluetooth integration. Try discovery again or enter the Bluetooth address manually."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_side": {
+        "name": "Current side"
+      }
+    },
+    "binary_sensor": {
+      "connection": {
+        "name": "Bluetooth connection"
+      }
+    },
+    "event": {
+      "side_changed": {
+        "name": "Side changed",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "side_1": "Side 1 facing up",
+              "side_2": "Side 2 facing up",
+              "side_3": "Side 3 facing up",
+              "side_4": "Side 4 facing up",
+              "side_5": "Side 5 facing up",
+              "side_6": "Side 6 facing up",
+              "side_7": "Side 7 facing up",
+              "side_8": "Side 8 facing up"
+            }
+          }
+        }
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "side_1": "Side 1 facing up",
+      "side_2": "Side 2 facing up",
+      "side_3": "Side 3 facing up",
+      "side_4": "Side 4 facing up",
+      "side_5": "Side 5 facing up",
+      "side_6": "Side 6 facing up",
+      "side_7": "Side 7 facing up",
+      "side_8": "Side 8 facing up"
+    }
+  }
+}

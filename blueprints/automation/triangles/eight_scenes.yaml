@@ -1,0 +1,107 @@
+blueprint:
+  name: Triangles — eight scenes
+  description: >-
+    Use an 8-sided tracker as a scene controller with Triangles. Select it and
+    assign scenes to any of its eight sides. Leave a side empty to do nothing.
+    Requires the Triangles Bluetooth custom integration. A settled side change
+    activates its assigned scenes. Connecting or restarting Home Assistant does
+    not activate scenes.
+  domain: automation
+  homeassistant:
+    min_version: "2026.9.4"
+  input:
+    tracker:
+      name: 8-sided tracker
+      selector:
+        device:
+          filter:
+            - integration: triangles
+    side_1:
+      name: Side 1 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_2:
+      name: Side 2 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_3:
+      name: Side 3 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_4:
+      name: Side 4 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_5:
+      name: Side 5 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_6:
+      name: Side 6 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_7:
+      name: Side 7 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+    side_8:
+      name: Side 8 scenes
+      default: []
+      selector:
+        entity:
+          filter:
+            - domain: scene
+          multiple: true
+
+mode: restart
+triggers:
+  - trigger: event
+    event_type: triangles_side_changed
+    event_data:
+      device_id: !input tracker
+variables:
+  scenes_by_side:
+    side_1: !input side_1
+    side_2: !input side_2
+    side_3: !input side_3
+    side_4: !input side_4
+    side_5: !input side_5
+    side_6: !input side_6
+    side_7: !input side_7
+    side_8: !input side_8
+  selected_scenes: "{{ scenes_by_side.get(trigger.event.data.type, []) }}"
+conditions:
+  - condition: template
+    value_template: "{{ selected_scenes | length > 0 }}"
+actions:
+  - action: scene.turn_on
+    target:
+      entity_id: "{{ selected_scenes }}"
