@@ -1,16 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <title>Eight-sided white tracker with a black button cap</title>
-  <defs><clipPath id="shell"><path d="M 78.10,37.46 Q 81,30 88.32,33.23 L 150.68,60.77 Q 158,64 163.61,69.70 L 211.39,118.30 Q 217,124 214.10,131.46 L 177.90,224.54 Q 175,232 167.68,228.77 L 105.32,201.23 Q 98,198 92.39,192.30 L 44.61,143.70 Q 39,138 41.90,130.54 Z"/></clipPath></defs>
+  <title>Timeular tracker with a horizontal black control strip</title>
+  <defs><clipPath id="shell"><path d="M 114.56,28.34 Q 124,18 133.94,27.86 L 227.06,120.14 Q 237,130 227.01,139.81 L 133.99,231.19 Q 124,241 114.34,230.87 L 29.66,142.13 Q 20,132 29.44,121.66 Z"/></clipPath></defs>
   <g clip-path="url(#shell)">
-  <polygon points="217,124 98,198 175,232" fill="#CBD3D9" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="217,124 158,64 81,30" fill="#DEE4E8" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="39,138 98,198 81,30" fill="#FAFCFD" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="217,124 98,198 81,30" fill="#EBF0F3" stroke="#B1BEC7" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="217,124 202.25,109.0 183.0,100.5" fill="#46515A" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="217,124 187.25,142.5 206.5,151.0" fill="#20292F" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="217,124 187.25,142.5 183.0,100.5" fill="#303B43" stroke="#35414A" stroke-width="1.5" stroke-linejoin="round"/>
-  <polygon points="194,110 207,120 198,129 186,119" fill="#1D262C" stroke="#71808B" stroke-width="1" stroke-linejoin="round"/>
-  <circle cx="192.5" cy="133.5" r="2.5" fill="#66CBB8"/>
+  <polygon points="124,18 20,132 50,131" fill="#ADB2B5"/>
+  <polygon points="20,132 124,241 50,131" fill="#BBC0C2"/>
+  <polygon points="124,18 50,131 237,130" fill="#F5F5F3"/>
+  <polygon points="50,131 124,241 237,130" fill="#E1E3E3"/>
+<path d="M20,132 L237,130" stroke="#8A8C8C" fill="none"/>
+<path d="M 98.23,123.16 Q 101,119 106.00,119.00 L 188.00,119.00 Q 193,119 196.69,122.38 L 201.31,126.62 Q 205,130 201.62,133.69 L 197.38,138.31 Q 194,142 189.00,142.00 L 106.00,142.00 Q 101,142 98.06,137.96 L 95.94,135.04 Q 93,131 95.77,126.84 Z" fill="#292C2D" stroke="#16191A"/>
+<circle cx="108" cy="130" r="2" fill="#0C0F10"/>
+<path d="M123.5,125.67 A5,5 0 1,1 118.5,125.67 M121,123 L121,130" fill="none" stroke="#8B9396" stroke-width="1.25"/>
   </g>
-  <path d="M 78.10,37.46 Q 81,30 88.32,33.23 L 150.68,60.77 Q 158,64 163.61,69.70 L 211.39,118.30 Q 217,124 214.10,131.46 L 177.90,224.54 Q 175,232 167.68,228.77 L 105.32,201.23 Q 98,198 92.39,192.30 L 44.61,143.70 Q 39,138 41.90,130.54 Z" fill="none" stroke="#667680" stroke-width="1.75" stroke-linejoin="round"/>
+  <path d="M 114.56,28.34 Q 124,18 133.94,27.86 L 227.06,120.14 Q 237,130 227.01,139.81 L 133.99,231.19 Q 124,241 114.34,230.87 L 29.66,142.13 Q 20,132 29.44,121.66 Z" fill="none" stroke="#8B9195" stroke-width="1" stroke-linejoin="round"/>
 </svg>

@@ -7,6 +7,7 @@ from unittest.mock import patch
 import pytest
 from bleak.exc import BleakError
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from homeassistant.setup import async_setup_component
 
 from custom_components.triangles.const import DOMAIN, EVENT_SIDE_CHANGED
@@ -43,6 +44,37 @@ async def test_device_entities_and_initial_read(hass, entry, ble):
     assert len(await async_get_triggers(hass, device.id)) == 8
     assert await async_get_triggers(hass, "nonexistent") == []
     assert tracker.read_gatt_char.await_count == 1
+
+
+async def test_default_name_update_preserves_device_and_entity_ids(hass, entry, ble):
+    hass.config_entries.async_update_entry(entry, title="8-sided tracker · EE:FF")
+    devices = dr.async_get(hass)
+    original_device = devices.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(DOMAIN, ADDRESS)},
+        name=entry.title,
+    )
+    devices.async_update_device(original_device.id, name_by_user="Office controller")
+    original_sensor = er.async_get(hass).async_get_or_create(
+        "sensor",
+        DOMAIN,
+        f"{ADDRESS}_current_side",
+        config_entry=entry,
+        suggested_object_id="desk_tracker_side",
+    )
+    await setup_tracker(hass, entry, ble)
+    device = devices.async_get_device_by_identifier((DOMAIN, ADDRESS), entry.entry_id)
+    assert entry.title == "Timeular tracker · EE:FF"
+    assert device.id == original_device.id
+    assert device.name_by_user == "Office controller"
+    assert hass.states.get(original_sensor.entity_id).state == "1"
+
+
+@pytest.mark.parametrize("title", ["Study scenes", "Timeular CR2032", "Timeular"])
+async def test_custom_entry_names_are_preserved(hass, entry, ble, title):
+    hass.config_entries.async_update_entry(entry, title=title)
+    await setup_tracker(hass, entry, ble)
+    assert entry.title == title
 
 
 @pytest.mark.parametrize("side", range(1, 9))

@@ -13,6 +13,11 @@ RETRY_SECONDS = 5
 MAX_RETRY_SECONDS = 60
 
 
+def default_tracker_name(address: str) -> str:
+    """Identify a Timeular tracker by its Bluetooth address suffix."""
+    return f"Timeular tracker · {address[-5:].upper()}"
+
+
 def parse_side(data: bytes | bytearray) -> int:
     """Decode the single-byte orientation; zero means no active face."""
     if len(data) != 1 or data[0] > 8:

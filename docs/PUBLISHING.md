@@ -7,7 +7,7 @@ Maintainer guide for CI, releases, and HACS distribution.
 HACS validation requires a public GitHub repository with Issues enabled, a
 description, and topics. Suggested metadata:
 
-- Description: `Use an eight-sided Bluetooth tracker as a Home Assistant scene controller.`
+- Description: `Use a Timeular Bluetooth tracker as a Home Assistant scene controller.`
 - Topics: `home-assistant`, `hacs`, `custom-integration`, `bluetooth`, `triangles`.
 
 If maintaining a fork, update the manifest's repository URLs and code owner:

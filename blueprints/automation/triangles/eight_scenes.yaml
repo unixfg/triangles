@@ -1,7 +1,7 @@
 blueprint:
   name: Triangles — eight scenes
   description: >-
-    Use an 8-sided tracker as a scene controller with Triangles. Select it and
+    Use a Timeular tracker as a scene controller with Triangles. Select it and
     assign scenes to any of its eight sides. Leave a side empty to do nothing.
     Requires the Triangles Bluetooth custom integration. A settled side change
     activates its assigned scenes. Connecting or restarting Home Assistant does
@@ -11,7 +11,7 @@ blueprint:
     min_version: "2026.9.4"
   input:
     tracker:
-      name: 8-sided tracker
+      name: Timeular tracker
       selector:
         device:
           filter:

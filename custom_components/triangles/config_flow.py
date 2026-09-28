@@ -14,7 +14,7 @@ from homeassistant.components import bluetooth
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_ADDRESS
 
-from .const import DOMAIN, ORIENTATION_SERVICE_UUID
+from .const import DOMAIN, ORIENTATION_SERVICE_UUID, default_tracker_name
 
 
 def is_supported_tracker(info: bluetooth.BluetoothServiceInfoBleak) -> bool:
@@ -24,11 +24,6 @@ def is_supported_tracker(info: bluetooth.BluetoothServiceInfoBleak) -> bool:
         name.startswith(("timeular", "zei"))
         or ORIENTATION_SERVICE_UUID in (uuid.lower() for uuid in info.service_uuids)
     )
-
-
-def _tracker_name(address: str) -> str:
-    """Build a default display name from the Bluetooth address suffix."""
-    return f"8-sided tracker · {address[-5:].upper()}"
 
 
 class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -48,7 +43,7 @@ class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured()
         self._discovery = discovery_info
         self.context["title_placeholders"] = {
-            "name": _tracker_name(discovery_info.address)
+            "name": default_tracker_name(discovery_info.address)
         }
         return await self.async_step_confirm()
 
@@ -58,13 +53,15 @@ class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
         assert self._discovery is not None
         if user_input is not None:
             return self.async_create_entry(
-                title=_tracker_name(self._discovery.address),
+                title=default_tracker_name(self._discovery.address),
                 data={CONF_ADDRESS: self._discovery.address.upper()},
             )
         self._set_confirm_only()
         return self.async_show_form(
             step_id="confirm",
-            description_placeholders={"name": _tracker_name(self._discovery.address)},
+            description_placeholders={
+                "name": default_tracker_name(self._discovery.address)
+            },
         )
 
     async def async_step_user(
@@ -90,7 +87,7 @@ class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
             self._abort_if_unique_id_configured()
             if address in devices:
                 return self.async_create_entry(
-                    title=_tracker_name(address), data={CONF_ADDRESS: address}
+                    title=default_tracker_name(address), data={CONF_ADDRESS: address}
                 )
         configured = self._async_current_ids()
         devices = {
@@ -105,7 +102,10 @@ class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_ADDRESS): vol.In(
-                        {address: f"8-sided tracker ({address})" for address in devices}
+                        {
+                            address: f"Timeular tracker ({address})"
+                            for address in devices
+                        }
                     )
                 }
             ),
@@ -123,7 +123,7 @@ class TrianglesConfigFlow(ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(address)
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=_tracker_name(address), data={CONF_ADDRESS: address}
+                    title=default_tracker_name(address), data={CONF_ADDRESS: address}
                 )
         return self.async_show_form(
             step_id="manual",

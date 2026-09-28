@@ -27,10 +27,10 @@ async def test_bluetooth_discovery(hass, ble, discovery_info):
     )
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == "confirm"
-    assert result["description_placeholders"] == {"name": "8-sided tracker · EE:FF"}
+    assert result["description_placeholders"] == {"name": "Timeular tracker · EE:FF"}
     result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == "8-sided tracker · EE:FF"
+    assert result["title"] == "Timeular tracker · EE:FF"
     assert result["data"] == {"address": ADDRESS}
     assert result["result"].unique_id == ADDRESS
     await hass.async_block_till_done()
@@ -57,7 +57,7 @@ async def test_select_discovered(hass, ble):
         result["flow_id"], {"address": ADDRESS}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == "8-sided tracker · EE:FF"
+    assert result["title"] == "Timeular tracker · EE:FF"
     await hass.async_block_till_done()
 
 
@@ -76,7 +76,7 @@ async def test_manual_address_rejects_macos_uuid(hass, ble):
         result["flow_id"], {"address": f"  {ADDRESS.lower()}  "}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == "8-sided tracker · EE:FF"
+    assert result["title"] == "Timeular tracker · EE:FF"
     assert result["data"] == {"address": ADDRESS}
     await hass.async_block_till_done()
 

@@ -4,17 +4,17 @@
     "flow_title": "{name}",
     "step": {
       "user": {
-        "title": "Add an 8-sided scene controller",
+        "title": "Add a Timeular tracker",
         "menu_options": {
           "discovered": "Choose a nearby tracker",
           "manual": "Enter a Bluetooth address"
         }
       },
       "discovered": {
-        "title": "Choose your tracker",
-        "description": "Turn on your tracker and close any apps connected to it. The tracker must be within Bluetooth range of Home Assistant.",
+        "title": "Choose your Timeular tracker",
+        "description": "Turn on your Timeular tracker and close any apps connected to it. The tracker must be within Bluetooth range of Home Assistant.",
         "data": {
-          "address": "Tracker"
+          "address": "Timeular tracker"
         }
       },
       "manual": {
@@ -26,7 +26,7 @@
       },
       "confirm": {
         "title": "Add {name}",
-        "description": "Add this tracker to Triangles. Close any other apps connected to it. After setup, assign scenes using the eight-scenes blueprint or device triggers."
+        "description": "Add this Timeular tracker to Triangles. Close any other apps connected to it. After setup, assign scenes using the eight-scenes blueprint or device triggers."
       }
     },
     "error": {
