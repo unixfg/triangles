@@ -16,7 +16,7 @@ concurrency:
 jobs:
   version:
     name: Validate release tag
-    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       tag: ${{ steps.metadata.outputs.tag }}
@@ -47,7 +47,7 @@ jobs:
   publish:
     name: Publish GitHub Release
     needs: [version, ci, validate]
-    runs-on: [self-hosted, Linux, X64, workstation-ci]
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: write
