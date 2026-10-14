@@ -130,6 +130,15 @@ GitHub Actions run tests, lint/format checks, ZIP packaging, Hassfest, and HACS
 validation. Version tags matching the manifest trigger an automatic GitHub
 Release with the installation ZIP attached after all checks pass.
 
+## Dependency updates
+
+Renovate checks dependencies daily from midnight to noon in America/Chicago.
+Routine updates share a limit of two open PRs and four new PRs per hour;
+non-major GitHub Actions updates are grouped. Patch, minor, and digest updates
+can merge after the required test, packaging, Hassfest, and HACS checks pass.
+Major upgrades require manual review. Security fixes bypass the update window
+and release-age delay, while retaining the same merge checks.
+
 ## Protocol references
 
 Triangles subscribes to characteristic
