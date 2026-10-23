@@ -9,4 +9,4 @@ habluetooth==6.26.11
 aiousbwatcher==1.1.2
 serialx==1.11.0
 voluptuous==0.16.0
-ruff==0.16.9
+ruff==0.17.2
