@@ -1,4 +1,4 @@
-pytest-homeassistant-custom-component==0.13.373
+pytest-homeassistant-custom-component==0.13.375
 bleak==3.0.2
 bleak-retry-connector==4.7.1
 bluetooth-adapters==2.4.0
